@@ -1,0 +1,23 @@
+<%- include("partials/header"); -%>
+    <h1>Shows</h1>
+    <form class="" action="/compose_episodes" method="post" onkeypress="return event.keyCode!=13" required>
+      <div class="form-group">
+        <label>Title</label>
+        <input class="form-control" type="text" name="postTitle" onkeypress="return event.keyCode!=13" required>
+        <label>Description</label>
+        <textarea class="form-control" name="postBody" rows="5" cols="30" onkeypress="return event.keyCode!=13" required></textarea>
+        <label>ImageUrl</label>
+        <input class="form-control" type="text" name="postImg" onkeypress="return event.keyCode!=13" required>
+        <label>Imdb</label>
+        <input class="form-control" type="text" name="postImdb" onkeypress="return event.keyCode!=13" required>
+        <label>Year</label>
+        <input class="form-control" type="text" name="postYear" onkeypress="return event.keyCode!=13" required>
+        <label>actors</label>
+        <input class=" "  data-role="taginput"  type="text" name="postActors" onkeypress="return event.keyCode!=13" required>
+        <label>Number of episodes</label>
+        <input class="form-control" type="text" name="postEp" onkeypress="return event.keyCode!=13" required>
+      </div>
+      <button class="btn btn-primary" type="submit" name="button">Next</button>
+  
+    </form>
+<%- include("partials/footer"); -%>

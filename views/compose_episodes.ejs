@@ -1,0 +1,15 @@
+<%- include("partials/header"); -%>
+    <h1>Episodes list</h1>
+    <h1><%=episodes%></h1>
+    <form class="" action="/compose_show" method="post" onkeypress="return event.keyCode!=13">
+      <div class="form-group">
+          <% for(i=0;i<episodes;i++){%> 
+        <label>episode <%= i+1 %> </label>
+        <input class="" data-role="taginput"  type="text" name="servers" onkeypress="return event.keyCode!=13">
+        <% } %>
+    </div>
+      
+      <button class="btn btn-primary" type="submit" name="button">Publish</button>
+  
+    </form>
+<%- include("partials/footer"); -%>
