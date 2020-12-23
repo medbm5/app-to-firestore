@@ -32,6 +32,10 @@ app.get("/", function(req, res){
   res.render("movie");
 });
 
+app.get("/UpdateShows", function(req, res){
+  res.render("update_show");
+});
+
 app.get("/shows", function(req, res){
   res.render("shows");
 });
