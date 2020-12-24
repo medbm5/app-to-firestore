@@ -1,4 +1,22 @@
 <%- include("partials/header"); -%>
     <h1>Update Show</h1>
-    <h3>Coming soon</h3>
+    <p>this page is the add new episode to your show or update existing episodes servers.Select show from the dropdown menu and the episode number to add or update and add servers of the episode</p>
+    <form class="" action="/update_show" method="post" onkeypress="return event.keyCode!=13">
+        <div class="form-group">
+          <label>Show title</label>
+          <select class="form-control" type="text" name="postTitle" onkeypress="return event.keyCode!=13" required>
+            <% shows.forEach(element => { %>
+                <option > <%=element%> </option>
+           <% }); %> 
+            
+            
+        </select>
+        <label>Episode number</label>
+          <input class="form-control" type="text" name="postNum" onkeypress="return event.keyCode!=13" required> 
+
+          <label>Servers</label>
+          <input class="" data-role="taginput"  type="text" name="postServers" onkeypress="return event.keyCode!=13" required>
+        </div>
+        <button class="btn btn-primary" type="submit" name="button">Publish</button>
+      </form>
 <%- include("partials/footer"); -%>

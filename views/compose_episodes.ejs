@@ -1,6 +1,6 @@
 <%- include("partials/header"); -%>
     <h1>Episodes list</h1>
-    <h1><%=episodes%></h1>
+    <p>Your show has <%=episodes%> episode. Enter each episode server and press enter you can sumbit multiple severs for each episode in the same field</s> </p>
     <form class="" action="/compose_show" method="post" onkeypress="return event.keyCode!=13">
       <div class="form-group">
           <% for(i=0;i<episodes;i++){%> 
