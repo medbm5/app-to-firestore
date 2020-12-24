@@ -134,7 +134,7 @@ app.post("/compose_show", function(req, res){
 
 
 
-app.listen(process.env.port, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.log("Server started on port 3000");
 });
 
