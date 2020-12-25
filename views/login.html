@@ -1,0 +1,65 @@
+<%- include("partials/header",{user: false}); -%>
+    <h1>Login</h1>
+    <p>Login to add movies or shows</p>
+    <p><strong>Email : </strong>test@trketv.com</p>
+    <p><strong>password : </strong>123456789</p>
+    <form id="login" class="" onkeypress="return event.keyCode!=13">
+      <div class="form-group">
+        <label>email</label>
+        <input class="form-control" type="email" name="email" onkeypress="return event.keyCode!=13" required>
+        <label>password</label>
+        <input class="form-control" type="password" name="password" onkeypress="return event.keyCode!=13" required>
+      </div>
+      <button class="btn btn-primary" type="submit" name="button">login</button>
+    </form>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const firebaseConfig = {
+          apiKey: "AIzaSyBGtJe_nloVjWrJtmnbOmuS4QM5be_qE40",
+          authDomain: "movies-cb314.firebaseapp.com",
+          databaseURL: "https://movies-cb314-default-rtdb.firebaseio.com",
+          projectId: "movies-cb314",
+          storageBucket: "movies-cb314.appspot.com",
+          messagingSenderId: "201149802523",
+          appId: "1:201149802523:web:dc46c8b30d2f7ee7bdf0be"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+        document
+          .getElementById("login")
+          .addEventListener("submit", (event) => {
+            event.preventDefault();
+            const login = event.target.email.value;
+            const password = event.target.password.value;
+
+            firebase
+              .auth()
+              .signInWithEmailAndPassword(login, password)
+              .then(({ user }) => {
+                return user.getIdToken().then((idToken) => {
+                  return fetch("/sessionLogin", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ idToken }),
+                  });
+                });
+                })
+                .then(() => {
+                  return firebase.auth().signOut();
+                })
+                .then(() => {
+                  window.location.assign("/");
+                });
+              return false;
+            });
+        });
+      </script>
+
+
+
+<%- include("partials/footer"); -%>
