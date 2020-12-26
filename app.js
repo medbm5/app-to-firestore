@@ -15,7 +15,7 @@ const db=admin.firestore();
 //crcsrf Middleware
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 const app = express();
 //midlwares setup
 app.engine("html", require("ejs").renderFile);
@@ -84,10 +84,149 @@ app.get("/", function (req, res) {
     });
 });
 
+
+//update movie info 
+app.get("/update_movie", function(req, res){
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then(() => {
+      get_movies_list().then(snapshot=>{
+        showsList=[]
+        snapshot.forEach(doc => {
+          showsList.push(doc.data().name)
+        });
+        res.render("update_movie.ejs",{movies:showsList});
+        
+      })
+    })
+    .catch((error) => {
+      res.redirect("/login");
+    });
+      
+    })
+    
+
+
+     
+app.post("/update_movie_info", function(req, res){
+     
+          console.log(req.body)
+          get_movie_info(req.body.postTitle).then(querySnapshot =>{
+            querySnapshot.forEach(function(doc) {
+              movieInfo=doc.data()
+              id=doc.id
+              console.log(movieInfo)
+              res.render("movie_info_update.ejs",{movieInfo:movieInfo,id:id})
+                
+            }); 
+            
+            
+          })
+          
+         
+        })
+       
+ //compose updated movie 
+ app.post("/compose_updated_movie", function(req, res){
+      const movie = {
+          title: req.body.postTitle,
+          Description: req.body.postBody,
+          ImageUrl: req.body.postImg,
+          Imdb: req.body.postImdb,
+          language:"Turky",
+          country:"Turkie",
+          Year: req.body.postYear,
+          actors: req.body.postActors.split(","),
+          Servers: req.body.postServers.split(","),
+        };
+        update_movie_in_firebase(req.body.id,movie)
+        res.redirect("/");
+
+});    
+        
+
+//update show info 
+app.get("/UpdateShowsInfo", function(req, res){
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then(() => {
+      get_shows_list().then(snapshot=>{
+        showsList=[]
+        snapshot.forEach(doc => {
+          showsList.push(doc.data().name)
+        });
+        res.render("update_shows.ejs",{movies:showsList});
+        
+     
+      })
+    })
+    .catch((error) => {
+      res.redirect("/login");
+    });
+  
+})
+
+
+
+ 
+app.post("/update_show_info", function(req, res){
+ 
+      console.log(req.body)
+      get_show_info(req.body.postTitle).then(querySnapshot =>{
+        querySnapshot.forEach(function(doc) {
+         showInfo=doc.data()
+          id=doc.id
+          console.log(showInfo)
+          res.render("show_info_update.ejs",{showInfo:showInfo,id:id})
+            
+        }); 
+        
+        
+      })
+      
+     
+    })
+   
+//compose updated movie 
+app.post("/compose_updated_show", function(req, res){
+  EpisodesServers=req.body.postServers
+  const show = {
+    title: req.body.postTitle,
+    Description: req.body.postBody,
+    ImageUrl: req.body.postImg,
+    Imdb: req.body.postImdb,
+    language:"Turky",
+    country:"Turkie",
+    Year: req.body.postYear,
+    actors: req.body.postActors,
+    EpServers:[]
+  };
+    EpserversList={}
+    if(typeof(EpisodesServers)==="string"){
+      EpserversList[0]=EpisodesServers.split(',')
+    }else{
+      console.log("hello")
+      for(i=0;i<EpisodesServers.length;i++){
+        EpserversList[i]=EpisodesServers[i].split(',')
+      }
+    }
+    show.EpServers=EpserversList
+    console.log(show)
+    update_show_in_firebase(req.body.id,show)
+    res.redirect("/UpdateShowsInfo");
+
+});      
+
+
+
 //post movie to firebase
 app.post("/compose_movie", function(req, res){
-    console.log("sessionCookie")
-       console.log(req)
         const movie = {
             title: req.body.postTitle,
             Description: req.body.postBody,
@@ -100,6 +239,7 @@ app.post("/compose_movie", function(req, res){
             Servers: req.body.postServers.split(","),
           };
           add_movie_to_firebase(movie)
+          add_movie_to_movielist(movie.title)
           res.redirect("/");
   
   });
@@ -130,11 +270,11 @@ app.post("/compose_episodes", function(req, res){
     EpserversList={}
     console.log(typeof(EpisodesServers)===String)
     if(typeof(EpisodesServers)==="string"){
-      EpserversList[0]=EpisodesServers.split(',')
+      EpserversList[1]=EpisodesServers.split(',')
     }else{
       console.log("hello")
       for(i=0;i<EpisodesServers.length;i++){
-        EpserversList[i]=EpisodesServers[i].split(',')
+        EpserversList[i+1]=EpisodesServers[i].split(',')
       }
     }
     shows.EpServers=EpserversList
@@ -227,6 +367,19 @@ function add_movie_to_firebase(data){
   });
   
   }
+
+  function update_movie_in_firebase(id,data){
+    const moviesRef=db.collection('movies')
+    moviesRef.doc(id).update(data).then(function() {
+      console.log("Document successfully updated!");
+  });
+  }
+  function update_show_in_firebase(id,data){
+    const moviesRef=db.collection('series')
+    moviesRef.doc(id).update(data).then(function() {
+      console.log("Document successfully updated!");
+  });
+  }
   
   
   function add_show_to_firebase(data){
@@ -249,6 +402,17 @@ function add_movie_to_firebase(data){
   });
   
   }
+
+  function add_movie_to_movielist(movieName){
+    data={name:movieName}
+    db.collection("moviesList").add(data).then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+  })
+  .catch(function(error) {
+      console.error("Error adding document: ", error);
+  });
+  
+  }
   
   function get_shows_list(){
     
@@ -259,7 +423,34 @@ function add_movie_to_firebase(data){
     })
     
   }
-  
+   
+  function get_movies_list(){
+    
+    const showsLisRef = db.collection('moviesList');
+    return showsLisRef.get().then(function(snapshot){
+      return snapshot;
+      
+    })
+    
+  }
+
+  function get_movie_info(movieName){
+    
+    const moviesRef=db.collection('movies')
+    return moviesRef.where("title", "==",movieName).get().then(function(querySnapshot) {
+      return querySnapshot;
+    })
+    
+  }
+  function get_show_info(movieName){
+    
+    const moviesRef=db.collection('series')
+    return moviesRef.where("title", "==",movieName).get().then(function(querySnapshot) {
+      return querySnapshot;
+    })
+    
+  }
+
   function add_new_episode(i,episodeObject,showname){
     const showsRef=db.collection('series')
     showsRef.where("title", "==",showname).get().then(function(querySnapshot) {
@@ -278,5 +469,3 @@ function add_movie_to_firebase(data){
         console.log("Error getting documents: ", error);
     });
   }
-  
-    

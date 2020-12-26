@@ -1,0 +1,31 @@
+
+<%- include("partials/header",{user: true}); -%>
+<h1>Shows</h1>
+<p>update info that you wanna modify and click update </p>
+<form class="" action="/compose_updated_show" method="post" onkeypress="return event.keyCode!=13">
+    <div class="form-group">
+    <input class="form-control" type="hidden" value=<%=id%> name="id" onkeypress="return event.keyCode!=13" required>   
+    <label>Title</label>
+    <input class="form-control" type="text" value=<%=showInfo.title%> name="postTitle" onkeypress="return event.keyCode!=13" required>
+    <label>Description</label>
+    <textarea class="form-control"  name="postBody" rows="5" cols="30"  onkeypress="return event.keyCode!=13" required><%=showInfo.Description%></textarea>
+    <label>ImageUrl</label>
+    <input class="form-control" type="text" name="postImg" value=<%=showInfo.ImageUrl%> onkeypress="return event.keyCode!=13" required>
+    <label>Imdb</label>
+    <input class="form-control" type="text" name="postImdb" value=<%=showInfo.Imdb%> onkeypress="return event.keyCode!=13" required> 
+    <label>Year</label>
+    <input class="form-control" type="text" name="postYear" value=<%=showInfo.Year%> onkeypress="return event.keyCode!=13" required>
+    <label>actors</label>
+    <input class=" "  data-role="taginput" value=<%=showInfo.actors%>  type="text" name="postActors" onkeypress="return event.keyCode!=13" required>
+    
+    <%Object.entries(showInfo.EpServers).forEach(element=>{%>
+    <label>Episode <%=(element[0])%></label>
+    <input class="" data-role="taginput" value=<%=element[1]%>   type="text" name="postServers" onkeypress="return event.keyCode!=13" required>
+    <% }) %> 
+    
+  </div>
+  <button class=" btn btn-primary" type="submit" name="button">Update</button>
+</form>
+
+
+<%- include("partials/footer"); -%>

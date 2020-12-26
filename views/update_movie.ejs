@@ -1,0 +1,16 @@
+<%- include("partials/header",{user: true}); -%>
+    <h1>Update Movie</h1>
+    <p>this page is to update existing movie info slect movie </p>
+    <form class="" action="/update_movie_info" method="post" onkeypress="return event.keyCode!=13">
+        <div class="form-group">
+          <label>movie title</label>
+          <select class="form-control" type="text" name="postTitle" onkeypress="return event.keyCode!=13" required>
+            <% movies.forEach(element => { %>
+                <option > <%=element%> </option>
+           <% }); %> 
+            
+            
+        </select>
+        <button class="update btn btn-primary" type="submit" name="button">Next</button>
+      </form>
+<%- include("partials/footer"); -%>

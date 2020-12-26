@@ -1,0 +1,27 @@
+
+<%- include("partials/header",{user: true}); -%>
+<h1>Movies</h1>
+<p>Add new movie to database.after each actor and server entred click ENTER to be able to enter multiple servers </p>
+<form class="" action="/compose_updated_movie" method="post" onkeypress="return event.keyCode!=13">
+    <div class="form-group">
+    <input class="form-control" type="hidden" value=<%=id%> name="id" onkeypress="return event.keyCode!=13" required>   
+    <label>Title</label>
+    <input class="form-control" type="text" value=<%=movieInfo.title%> name="postTitle" onkeypress="return event.keyCode!=13" required>
+    <label>Description</label>
+    <textarea class="form-control"  name="postBody" rows="5" cols="30"  onkeypress="return event.keyCode!=13" required><%=movieInfo.Description%></textarea>
+    <label>ImageUrl</label>
+    <input class="form-control" type="text" name="postImg" value=<%=movieInfo.ImageUrl%> onkeypress="return event.keyCode!=13" required>
+    <label>Imdb</label>
+    <input class="form-control" type="text" name="postImdb" value=<%=movieInfo.Imdb%> onkeypress="return event.keyCode!=13" required> 
+    <label>Year</label>
+    <input class="form-control" type="text" name="postYear" value=<%=movieInfo.Year%> onkeypress="return event.keyCode!=13" required>
+    <label>actors</label>
+    <input class=" "  data-role="taginput" value=<%=movieInfo.actors%>  type="text" name="postActors" onkeypress="return event.keyCode!=13" required>
+    <label>Server 1</label>
+    <input class="" data-role="taginput" value=<%=movieInfo.Servers%>   type="text" name="postServers" onkeypress="return event.keyCode!=13" required>
+  </div>
+  <button class=" btn btn-primary" type="submit" name="button">Update</button>
+</form>
+
+
+<%- include("partials/footer"); -%>
